@@ -16,9 +16,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -27,35 +31,40 @@ import com.quascenta.petersroad.droidtag.Bluetooth.BLEServiceConnection;
 import com.quascenta.petersroad.droidtag.Bluetooth.BleVO.BleDevice;
 import com.quascenta.petersroad.droidtag.Bluetooth.BluetoothLeService;
 import com.quascenta.petersroad.droidtag.EventBus.Events;
+import com.quascenta.petersroad.droidtag.EventListeners.EventListener;
+import com.quascenta.petersroad.droidtag.EventListeners.FragmentLifeCycle;
 import com.quascenta.petersroad.droidtag.R;
-import com.quascenta.petersroad.droidtag.fragments.ReportGenerationFragment;
+import com.quascenta.petersroad.droidtag.fragments.RegisterDeviceFragment;
 import com.quascenta.petersroad.droidtag.fragments.ScanDeviceFragment;
 import com.quascenta.petersroad.droidtag.widgets.CustomViewPager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.EventBusException;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements EventListener{
+
+    PagerAdapter adapter ;
+    EventListener listener;
     private static final String TAG = "Bluetooth LE SERVICE ";
-
-
-    // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
     private static final int REQUEST_ENABLE_BT = 1;
+    public static int SCAN_DEVICE = 0;
+    public static final int REGISTER_DEVICE = 1;
+    public static final int SAVE_DEVICE = 2;
+    public static final int LOAD_MAIN = 3;
+    BleDevice temp;
     protected static String uuidQppService = "0000fee9-0000-1000-8000-00805f9b34fb";
     protected static String uuidQppCharWrite = "d44bc439-abfd-45a2-b575-925416129600";
-    @Bind(R.id.btn_next)
-    Button next;
-    @Bind(R.id.btn_skip)
-    Button skip;
-    @Bind(R.id.layoutDots)
-    LinearLayout linearLayout;
-    ScanDeviceFragment fragment;
+
     private BluetoothGattCharacteristic mWriteCharacteristic;
     private int mPermissionIdx = 0x10;
     private BluetoothAdapter mBluetoothAdapter;
@@ -63,6 +72,18 @@ public class MainActivity extends BaseActivity {
     private BluetoothLeService mBluetoothLeService;
     private boolean mScanning;
     private Handler mHandler = new Handler();
+
+    @Bind(R.id.btn_next)
+    Button next;
+    @Bind(R.id.btn_skip)
+    Button skip;
+    @Bind(R.id.layoutDots)
+    LinearLayout linearLayout;
+
+    CustomViewPager viewPager;
+
+    ScanDeviceFragment fragment;
+    RegisterDeviceFragment fragment1;
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
 
@@ -89,15 +110,29 @@ public class MainActivity extends BaseActivity {
 
 
     }
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void getSelectedDevice(Events.Recieve_BLEDeviceForRegistration<BleDevice> s) throws EventBusException{
+        changePage(REGISTER_DEVICE);
+
+
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 21) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+      /*  if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
+        }*/
+
         fragment = new ScanDeviceFragment();
+        fragment1 = new RegisterDeviceFragment();
+
         setContentView(R.layout.activity_register_ble_device);
+        ButterKnife.bind(this);
 
         //
         init();
@@ -118,11 +153,14 @@ public class MainActivity extends BaseActivity {
         dialog.setMessage(x);
     }
 
-    public boolean postAck(BleDevice b) {
+    public boolean posttoSCANfragment(BleDevice b) {
+
         EventBus.getDefault().postSticky(new Events.Send_BLEDeviceForRegistration<BleDevice>(b));
 
         return true;
     }
+
+
 
     @SuppressWarnings("deprecation")
     private void scanLeDevice(final boolean enable) {
@@ -197,20 +235,59 @@ public class MainActivity extends BaseActivity {
         }
 
     }
-
+    public void changePage(int page){
+        viewPager.setCurrentItem(page);
+        viewPager.getAdapter().notifyDataSetChanged();
+    }
 
     private void init() {
 
         final ActionBar ab = getSupportActionBar();
-        CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.view_pager);
-        viewPager.setPagingEnabled(true);
+        viewPager = (CustomViewPager) findViewById(R.id.view_pager);
+        viewPager.setPagingEnabled(false);
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         adapter.addFragment(fragment, "Scan Loggers");
-        adapter.addFragment(new ReportGenerationFragment(), "REPORT");
-
-        viewPager.setOffscreenPageLimit(2);
+        adapter.addFragment(fragment1, "REPORT");
+        skip.setVisibility(View.INVISIBLE);
+        next.setVisibility(View.INVISIBLE);
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(SCAN_DEVICE);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                FragmentLifeCycle   fragmentToShow = (FragmentLifeCycle)adapter.getItem(position);
+                fragmentToShow.onResumeFragment(temp);
+                SCAN_DEVICE = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+
+
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().hasSubscriberForEvent(Events.Send_BLEDeviceForRegistration.class)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     BleDevice setUpDummyBleDevice(String name, String address, int x) {
@@ -220,7 +297,16 @@ public class MainActivity extends BaseActivity {
         return device;
     }
 
-    static class PagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void check(BleDevice s) {
+        Log.d(TAG,"pass");
+        temp = s;
+        changePage(REGISTER_DEVICE);
+
+    }
+
+
+    public class PagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
@@ -232,6 +318,8 @@ public class MainActivity extends BaseActivity {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
         }
+
+
 
         @Override
         public Fragment getItem(int position) {
@@ -294,7 +382,7 @@ public class MainActivity extends BaseActivity {
             super.onPostExecute(aVoid);
 
             progressDialog.dismiss();
-            postAck(setUpDummyBleDevice("Quintic BLE", "24:0A:45:aa:2d", 2504));
+            posttoSCANfragment(setUpDummyBleDevice("Quintic BLE", "24:0A:45:aa:2d", 2504));
         }
 
         @Override
@@ -303,6 +391,9 @@ public class MainActivity extends BaseActivity {
             showProgress(progressDialog, values[0]);
         }
     }
+
+
+
 }
 
 

@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.github.pedrovgs.DraggableListener;
 import com.github.pedrovgs.DraggableView;
@@ -179,6 +181,10 @@ public class AlertListFragment extends Fragment {
         draggableView.setDraggableListener(new DraggableListener() {
             @Override
             public void onMaximized() {
+
+
+
+
                 updateActionBarTitle();
             }
 
@@ -244,10 +250,7 @@ public class AlertListFragment extends Fragment {
                         isWindowSelected = true;
                         tvShowSelected = adapter.getItem(position);
                         new MyTask().execute(tvShowSelected);
-                        LoadChart(chart.generateDefaultData(tvShowSelected.getSensorCollection(), lowerlimit, upperlimit), previewChart.generateDefaultData(tvShowSelected.getSensorCollection(), lowerlimit, upperlimit));
 
-                        draggableView.setVisibility(View.VISIBLE);
-                        draggableView.maximize();
                     }
                     //  renderEpisodesHeader(tvShow);
                     // renderEpisodes(tvShow);
@@ -370,15 +373,24 @@ public class AlertListFragment extends Fragment {
         @Override
         protected Boolean doInBackground(DeviceViewModel... deviceViewModels) {
             adapte1r = new MyAdapter(getActivity().getApplicationContext(), deviceViewModels[0]);
-
+            publishProgress();
             return true;
         }
 
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            stickyList.setAdapter(adapte1r);
+            super.onProgressUpdate(values);
+        }
 
         @Override
         protected void onPostExecute(Boolean aVoid) {
-            if (aVoid)
-                stickyList.setAdapter(adapte1r);
+            if (aVoid){
+                LoadChart(chart.generateDefaultData(tvShowSelected.getSensorCollection(), lowerlimit, upperlimit), previewChart.generateDefaultData(tvShowSelected.getSensorCollection(), lowerlimit, upperlimit));
+                draggableView.setVisibility(View.VISIBLE);
+                draggableView.maximize();
+            }
+
 
 
         }

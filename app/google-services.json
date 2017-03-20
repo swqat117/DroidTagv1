@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "72588460211",
+    "firebase_url": "https://droidtag-162106.firebaseio.com",
+    "project_id": "droidtag-162106",
+    "storage_bucket": "droidtag-162106.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:72588460211:android:3a896296f78011ba",
+        "android_client_info": {
+          "package_name": "com.quascenta.petersroad.droidtag"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "72588460211-p07h56ntakh4tahu91amrj4k82tk3qf6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quascenta.petersroad.droidtag",
+            "certificate_hash": "d330a8442ed55fed41bf4c60bb7774441f1fe6a8"
+          }
+        },
+        {
+          "client_id": "72588460211-m5hk9ssfus5e3binqeuhn6uqq38up4hq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuwlHbn-BtORUlTW-EFxN7wei318OJ-7E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "72588460211-m5hk9ssfus5e3binqeuhn6uqq38up4hq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

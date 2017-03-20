@@ -137,4 +137,25 @@ public class Events {
 
 
     }
+
+    public static class Recieve_BLEDeviceForRegistration<BleDevice> {
+
+
+        private BleDevice content;
+
+        public Recieve_BLEDeviceForRegistration(BleDevice content) {
+            this.content = content;
+        }
+
+        public BleDevice getContent() {
+            return content;
+        }
+
+        public void setContent(BleDevice content) {
+            this.content = content;
+        }
+
+
+    }
+
 }

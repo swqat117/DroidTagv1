@@ -3,35 +3,42 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    card_view:cardBackgroundColor="@color/black_transparent"
-    card_view:cardCornerRadius="2dp"
-    card_view:contentPadding="2dp">
+    android:layout_margin="8dp"
+
+    card_view:layout_collapseMode="parallax"
+    android:scrollbarTrackVertical="@color/colorPrimary"
+
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:background="@color/colorAccent"
         android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/device_name"
-            style="@style/main_title"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            style="@style/secondary_title"/>
 
         <TextView
             android:id="@+id/device_address"
-            style="@style/secondary_title"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/device_name"
-            android:layout_marginTop="4dp" />
+            android:textColor="@color/colorPrimary"
+            android:layout_marginTop="4dp"
+            style="@style/secondary_title"/>
 
         <TextView
             android:id="@+id/device_state"
             style="@style/tertiary_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
             android:layout_alignParentEnd="true"
             android:layout_margin="4dp"
             android:padding="4dp" />

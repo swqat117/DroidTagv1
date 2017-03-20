@@ -8,9 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="image_view">
-        <item name="android:scaleType">centerCrop</item>
-    </style>
 
     <!-- Main Activity -->
     <declare-styleable name="LovelyView">
@@ -30,12 +27,37 @@
 
     </style>
 
+    <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
+     <item name="android:textSize">10sp</item>
+     <item name="android:textColor">@android:color/holo_orange_light</item>
+
+    </style>
+
+
+
+    <style name="StyledTilEditTextTheme">
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@android:color/holo_orange_light</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="StyledTilEditText">
+
+        <item name="android:theme">@style/StyledTilEditTextTheme</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
+
 
     <style name="main_activity_button_title">
         <item name="android:textSize">@dimen/button_title_text_size</item>
         <item name="android:layout_marginTop">@dimen/button_title_margin_top</item>
         <item name="android:layout_gravity">center_horizontal</item>
         <item name="android:textStyle">bold</item>
+
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@color/semi_transparent_black</item>
         <item name="android:paddingLeft">@dimen/button_title_padding_left_right</item>
@@ -111,6 +133,15 @@
     <style name="main_title">
         <item name="android:textColor">@color/text_hard_grey</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_marginLeft">@dimen/tv_show_title_margin_left_top</item>
+    </style>
+    <style name="primart_title">
+        <item name="android:textColor">@color/text_hard_grey</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">32dp</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_marginLeft">@dimen/tv_show_title_margin_left_top</item>
@@ -118,16 +149,18 @@
 
     <style name="secondary_title">
         <item name="android:textColor">@color/text_hard_grey</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:maxLines">1</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_marginLeft">@dimen/tv_show_title_margin_left_top</item>
     </style>
 
     <style name="tertiary_title">
         <item name="android:textColor">@color/text_hard_grey</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textStyle">normal</item>
         <item name="android:maxLines">1</item>
+        <item name="android:textSize">8dp</item>
         <item name="android:ellipsize">end</item>
         <item name="android:layout_marginLeft">@dimen/tv_show_title_margin_left_top</item>
     </style>
