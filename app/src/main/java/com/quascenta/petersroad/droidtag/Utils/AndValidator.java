@@ -9,7 +9,7 @@ import android.widget.EditText;
  * @author Andrea B.
  */
 public class AndValidator extends MultiValidator {
-    public AndValidator(Validator... validators) {
+    public AndValidator(String errorMessage, Validator... validators) {
         super(null, validators);
     }
 

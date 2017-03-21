@@ -10,8 +10,6 @@ import android.view.KeyEvent;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-import com.quascenta.petersroad.droidtag.Utils.Validator;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -21,6 +19,12 @@ import java.lang.reflect.Method;
  * @author Said Tahsin Dane <tasomaniac@gmail.com>
  */
 public class FormAutoCompleteTextView extends AutoCompleteTextView {
+    private EditTextValidator editTextValidator;
+    /**
+     * Keep track of which icon we used last
+     */
+    private Drawable lastErrorIcon = null;
+
     public FormAutoCompleteTextView(Context context) {
         super(context);
         // FIXME how should this constructor be handled
@@ -66,14 +70,6 @@ public class FormAutoCompleteTextView extends AutoCompleteTextView {
     public boolean testValidity() {
         return editTextValidator.testValidity();
     }
-
-    private EditTextValidator editTextValidator;
-
-
-    /**
-     * Keep track of which icon we used last
-     */
-    private Drawable lastErrorIcon = null;
 
     /**
      * Don't send delete key so edit text doesn't capture it and close error

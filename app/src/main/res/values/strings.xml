@@ -48,6 +48,7 @@
     <string name="end">End</string>
     <string name="start">Start</string>
     <string name="set_limits_humidity">Set Limits (Humidity)</string>
+    <string name="place_details"><![CDATA[&lt;b&gt;%1$s&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Place Id: %2$s&lt;/i&gt;&lt;br/&gt;Address: %3$s&lt;br/&gt;Phone: %4$s&lt;br/&gt;Website: %5$s]]></string>
 
 
 </resources>

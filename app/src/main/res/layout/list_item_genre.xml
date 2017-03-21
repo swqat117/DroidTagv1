@@ -1,32 +1,26 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_item_height"
-    android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp">
+    android:layout_height="wrap_content"
+    android:background="#c000"
+    android:orientation="vertical"
 
-    <ImageView
-        android:id="@+id/list_item_genre_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/horizontal_margin"
-        tools:src="@drawable/ic_share_black_24dp" />
+    >
 
     <TextView
-        android:id="@+id/list_item_genre_name"
+        android:id="@+id/suggestion_company"
+        style="@style/textviewtheme"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/list_item_left_margin"
-        android:gravity="center_vertical"
-        tools:text="Genre" />
-
-    <ImageView
-        android:id="@+id/list_item_genre_arrow"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|end"
-        android:layout_marginRight="@dimen/horizontal_margin"
-        android:src="@drawable/ic_arrowdown" />
+        android:padding="4dp"
+        android:text="Easy Solutions" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/suggestion_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="Easy Solutions"
+        android:textColor="@color/colorPrimary"
+        android:textSize="12sp" />
+
+</LinearLayout>

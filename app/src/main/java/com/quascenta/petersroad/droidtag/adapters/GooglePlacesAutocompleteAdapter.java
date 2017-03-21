@@ -1,141 +1,252 @@
 package com.quascenta.petersroad.droidtag.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.text.style.CharacterStyle;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.quascenta.petersroad.droidtag.fragments.RegisterDeviceFragment;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.data.DataBufferUtils;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.quascenta.petersroad.droidtag.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by AKSHAY on 3/20/2017.
  */
 
 public class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Filterable {
-    private static final String LOG_TAG = "Google Places";
-    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
-    private static final String OUT_JSON = "/json";
-    private static final String API_KEY = "your_api_key";
-    private ArrayList<String> resultList;
-    private Context context = null;
-    public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-        this.context = context;
+    private static final String TAG = "PlaceAutocompleteAdapter";
+    private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
+
+    private static final int PRIMARY_VIEW = 1;
+
+    /**
+     * Current results returned by this adapter.
+     */
+    private ArrayList<AutocompletePrediction> mResultList;
+
+    /**
+     * Handles autocomplete requests.
+     */
+    private GoogleApiClient mGoogleApiClient;
+
+    /**
+     * The bounds used for Places Geo Data autocomplete API requests.
+     */
+    private LatLngBounds mBounds;
+
+    /**
+     * The autocomplete filter used to restrict queries to a specific set of place types.
+     */
+    private AutocompleteFilter mPlaceFilter;
+
+    private LayoutInflater inflater;
+
+    private int status_search;
+
+    /**
+     * Initializes with a resource for text rows and autocomplete query bounds.
+     *
+     * @see android.widget.ArrayAdapter#ArrayAdapter(android.content.Context, int)
+     */
+    public GooglePlacesAutocompleteAdapter(Context context, GoogleApiClient googleApiClient,
+                                           LatLngBounds bounds, AutocompleteFilter filter, int status) {
+        super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
+        mGoogleApiClient = googleApiClient;
+        mBounds = bounds;
+        mPlaceFilter = filter;
+        inflater = LayoutInflater.from(context);
+        status_search = status;
     }
 
+    /**
+     * Sets the bounds for all subsequent queries.
+     */
+    public void setBounds(LatLngBounds bounds) {
+        mBounds = bounds;
+    }
 
-
-
+    /**
+     * Returns the number of results received in the last autocomplete query.
+     */
     @Override
     public int getCount() {
-        if(resultList != null)
-            return resultList.size();
-        else
-            return 0;
+        return mResultList.size();
+    }
+
+    /**
+     * Returns an item from the last autocomplete query.
+     */
+    @Override
+    public AutocompletePrediction getItem(int position) {
+        return mResultList.get(position);
     }
 
     @Override
-    public String getItem(int index) {
-        return resultList.get(index);
-    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        AutocompletePrediction item = getItem(position);
+
+        ViewHolder holder;
 
 
-    public ArrayList<String> autocomplete(String input) {
-        ArrayList<String> resultList = null;
-        ArrayList<String> descriptionList = null;
-        HttpURLConnection conn = null;
-        StringBuilder jsonResults = new StringBuilder();
-        try {
-            StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
-            sb.append("?key=" + API_KEY);
-            sb.append("&components=country:in");
-            sb.append("&input=" + URLEncoder.encode(input, "utf8"));
+        if (convertView == null) {
 
-            URL url = new URL(sb.toString());
-            conn = (HttpURLConnection) url.openConnection();
-            InputStreamReader in = new InputStreamReader(conn.getInputStream());
-
-            // Load the results into a StringBuilder
-            int read;
-            char[] buff = new char[1024];
-            while ((read = in.read(buff)) != -1) {
-                jsonResults.append(buff, 0, read);
-            }
-        } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Error processing Places API URL", e);
-            return resultList;
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error connecting to Places API", e);
-            return resultList;
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
+            holder = new ViewHolder();
+            convertView = inflater.inflate(R.layout.list_item_genre, parent, false);
+            holder.t1 = (TextView) convertView.findViewById(R.id.suggestion_company);
+            holder.t2 = (TextView) convertView.findViewById(R.id.suggestion_location);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        try {
-            // Create a JSON object hierarchy from the results
-            Log.d("yo",jsonResults.toString());
-            JSONObject jsonObj = new JSONObject(jsonResults.toString());
-            JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
 
-            // Extract the Place descriptions from the results
-            resultList = new ArrayList(predsJsonArray.length());
-            descriptionList = new ArrayList(predsJsonArray.length());
-            for (int i = 0; i < predsJsonArray.length(); i++) {
-                resultList.add(predsJsonArray.getJSONObject(i).toString());
-                descriptionList.add(predsJsonArray.getJSONObject(i).getString("description"));
-            }
-         //   saveArray(resultList.toArray(new String[resultList.size()]), "predictionsArray", getContext());
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Cannot process JSON", e);
+        // Sets the primary and secondary text for a row.
+        // Note that getPrimaryText() and getSecondaryText() return a CharSequence that may contain
+        // styling based on the given CharacterStyle.
+
+        holder.t1.setText(item.getPrimaryText(STYLE_BOLD));
+        if (status_search == PRIMARY_VIEW) {
+            holder.t2.setVisibility(View.GONE);
+        } else {
+            holder.t2.setVisibility(View.VISIBLE);
+            holder.t2.setText(item.getSecondaryText(STYLE_BOLD));
+
         }
 
-        return descriptionList;
+        return convertView;
     }
 
-
+    /**
+     * Returns the filter for the current set of autocomplete results.
+     */
     @Override
     public Filter getFilter() {
-        Filter filter = new Filter() {
+        return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults filterResults = new Filter.FilterResults();
-                if (constraint != null) {
-                    // Retrieve the autocomplete results.
-                    resultList = autocomplete(constraint.toString());
+                FilterResults results = new FilterResults();
 
-                    // Assign the data to the FilterResults
-                    filterResults.values = resultList;
-                    filterResults.count = resultList.size();
+                // We need a separate list to store the results, since
+                // this is run asynchronously.
+                ArrayList<AutocompletePrediction> filterData = new ArrayList<>();
+
+                // Skip the autocomplete query if no constraints are given.
+                if (constraint != null) {
+                    // Query the autocomplete API for the (constraint) search string.
+                    filterData = getAutocomplete(constraint);
                 }
-                return filterResults;
+
+                results.values = filterData;
+                if (filterData != null) {
+                    results.count = filterData.size();
+                } else {
+                    results.count = 0;
+                }
+
+                return results;
             }
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
+
                 if (results != null && results.count > 0) {
-                  //  setImageVisibility();
+                    // The API returned at least one result, update the data.
+                    mResultList = (ArrayList<AutocompletePrediction>) results.values;
                     notifyDataSetChanged();
                 } else {
+                    // The API did not return any results, invalidate the data set.
                     notifyDataSetInvalidated();
                 }
             }
+
+            @Override
+            public CharSequence convertResultToString(Object resultValue) {
+                // Override this method to display a readable result in the AutocompleteTextView
+                // when clicked.
+                if (resultValue instanceof AutocompletePrediction) {
+                    return ((AutocompletePrediction) resultValue).getFullText(null);
+                } else {
+                    return super.convertResultToString(resultValue);
+                }
+            }
         };
-        return filter;
     }
+
+    /**
+     * Submits an autocomplete query to the Places Geo Data Autocomplete API.
+     * Results are returned as frozen AutocompletePrediction objects, ready to be cached.
+     * objects to store the Place ID and description that the API returns.
+     * Returns an empty list if no results were found.
+     * Returns null if the API client is not available or the query did not complete
+     * successfully.
+     * This method MUST be called off the main UI thread, as it will block until data is returned
+     * from the API, which may include a network request.
+     *
+     * @param constraint Autocomplete query string
+     * @return Results from the autocomplete API or null if the query was not successful.
+     * @see Places#GEO_DATA_API#getAutocomplete(CharSequence)
+     * @see AutocompletePrediction#freeze()
+     */
+    private ArrayList<AutocompletePrediction> getAutocomplete(CharSequence constraint) {
+        if (mGoogleApiClient.isConnected()) {
+            Log.i(TAG, "Starting autocomplete query for: " + constraint);
+
+            // Submit the query to the autocomplete API and retrieve a PendingResult that will
+            // contain the results when the query completes.
+            PendingResult<AutocompletePredictionBuffer> results =
+                    Places.GeoDataApi
+                            .getAutocompletePredictions(mGoogleApiClient, constraint.toString(),
+                                    mBounds, mPlaceFilter);
+
+            // This method should have been called off the main UI thread. Block and wait for at most 60s
+            // for a result from the API.
+            AutocompletePredictionBuffer autocompletePredictions = results
+                    .await(60, TimeUnit.SECONDS);
+
+            // Confirm that the query completed successfully, otherwise return null
+            final Status status = autocompletePredictions.getStatus();
+            if (!status.isSuccess()) {
+                Toast.makeText(getContext(), "Error contacting API: " + status.toString(),
+                        Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Error getting autocomplete prediction API call: " + status.toString());
+                autocompletePredictions.release();
+                return null;
+            }
+
+            Log.i(TAG, "Query completed. Received " + autocompletePredictions.getCount()
+                    + " predictions.");
+
+            // Freeze the results immutable representation that can be stored safely.
+            return DataBufferUtils.freezeAndClose(autocompletePredictions);
+        }
+        Log.e(TAG, "Google API client is not connected for autocomplete query.");
+        return null;
+    }
+
+
+    private class ViewHolder {
+        TextView t1;
+        TextView t2;
+    }
+
 }

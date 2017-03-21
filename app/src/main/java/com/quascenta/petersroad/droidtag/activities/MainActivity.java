@@ -11,14 +11,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -52,19 +50,27 @@ import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity implements EventListener{
 
-    PagerAdapter adapter ;
-    EventListener listener;
+    public static final int REGISTER_DEVICE = 1;
+    public static final int SAVE_DEVICE = 2;
+    public static final int LOAD_MAIN = 3;
     private static final String TAG = "Bluetooth LE SERVICE ";
     private static final long SCAN_PERIOD = 10000;
     private static final int REQUEST_ENABLE_BT = 1;
     public static int SCAN_DEVICE = 0;
-    public static final int REGISTER_DEVICE = 1;
-    public static final int SAVE_DEVICE = 2;
-    public static final int LOAD_MAIN = 3;
-    BleDevice temp;
     protected static String uuidQppService = "0000fee9-0000-1000-8000-00805f9b34fb";
     protected static String uuidQppCharWrite = "d44bc439-abfd-45a2-b575-925416129600";
-
+    PagerAdapter adapter;
+    EventListener listener;
+    BleDevice temp;
+    @Bind(R.id.btn_next)
+    Button next;
+    @Bind(R.id.btn_skip)
+    Button skip;
+    @Bind(R.id.layoutDots)
+    LinearLayout linearLayout;
+    CustomViewPager viewPager;
+    ScanDeviceFragment fragment;
+    RegisterDeviceFragment fragment1;
     private BluetoothGattCharacteristic mWriteCharacteristic;
     private int mPermissionIdx = 0x10;
     private BluetoothAdapter mBluetoothAdapter;
@@ -72,18 +78,6 @@ public class MainActivity extends BaseActivity implements EventListener{
     private BluetoothLeService mBluetoothLeService;
     private boolean mScanning;
     private Handler mHandler = new Handler();
-
-    @Bind(R.id.btn_next)
-    Button next;
-    @Bind(R.id.btn_skip)
-    Button skip;
-    @Bind(R.id.layoutDots)
-    LinearLayout linearLayout;
-
-    CustomViewPager viewPager;
-
-    ScanDeviceFragment fragment;
-    RegisterDeviceFragment fragment1;
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
 
@@ -242,7 +236,7 @@ public class MainActivity extends BaseActivity implements EventListener{
 
     private void init() {
 
-        final ActionBar ab = getSupportActionBar();
+
         viewPager = (CustomViewPager) findViewById(R.id.view_pager);
         viewPager.setPagingEnabled(false);
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
