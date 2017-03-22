@@ -12,5 +12,9 @@
         android:icon="@drawable/ic_add_black_24dp"
         android:title="Add Logger"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/signout"
+        android:title="@string/btn_sign_out"
+        app:showAsAction="never" />
 
 </menu>

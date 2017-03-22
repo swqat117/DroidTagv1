@@ -25,7 +25,7 @@
 
 
     <com.quascenta.petersroad.droidtag.widgets.CustomViewPager
-        android:id="@+id/viewpager"
+        android:id="@+id/viewpagermain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

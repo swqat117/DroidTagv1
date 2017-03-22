@@ -60,6 +60,7 @@
 
     <style name="StyledTilEditTextTheme">
         <item name="android:maxLength">25</item>
+        <item name="android:maxLines">1</item>
         <item name="android:imeOptions">actionNext</item>
         <item name="android:singleLine">true</item>
         <item name="android:textColorHint">@color/soft_white</item>

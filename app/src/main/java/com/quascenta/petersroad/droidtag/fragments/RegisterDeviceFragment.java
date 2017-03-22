@@ -1,8 +1,6 @@
 package com.quascenta.petersroad.droidtag.fragments;
 
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,11 +13,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -34,10 +29,6 @@ import com.quascenta.petersroad.droidtag.widgets.FormAutoCompleteTextView;
 import com.quascenta.petersroad.droidtag.widgets.FormEditText;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,66 +67,7 @@ public class RegisterDeviceFragment extends Fragment implements FragmentLifeCycl
     FormEditText rh_lower_limit;
     String country;
     // TO PROVIDE MORE INFORMATION ABOUT THE RESULT SET (GOOGLE PLACES API ) , NOT REQUIRED RIGHT NOW
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = places -> {
-        if (!places.getStatus().isSuccess()) {
-            // Request did not complete successfully
-            Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-            places.release();
-            return;
-        }
-        // Get the Place object from the buffer.
-        final Place place = places.get(0);
-        final Locale locale = place.getLocale();
-        LatLng coordinates = place.getLatLng(); // Get the coordinates from your place
-        Geocoder geocoder = new Geocoder(getContext(), locale);
 
-        List<Address> addresses = null; // Only retrieve 1 address
-        try {
-            addresses = geocoder.getFromLocation(
-                    coordinates.latitude,
-                    coordinates.longitude,
-                    1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Address address = addresses.get(0);
-        source_company.setText(place.getName());
-        source_location_et.append(locale.getCountry());
-
-
-        places.release();
-    };
-    private ResultCallback<PlaceBuffer> mUpdateCitisCallBack
-            = places -> {
-        if (!places.getStatus().isSuccess()) {
-            // Request did not complete successfully
-            Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
-            places.release();
-            return;
-        }
-        // Get the Place object from the buffer.
-        final Place place = places.get(0);
-        final Locale locale = place.getLocale();
-        LatLng coordinates = place.getLatLng(); // Get the coordinates from your place
-        Geocoder geocoder = new Geocoder(getContext(), locale);
-
-        List<Address> addresses = null; // Only retrieve 1 address
-        try {
-            addresses = geocoder.getFromLocation(
-                    coordinates.latitude,
-                    coordinates.longitude,
-                    1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Address address = addresses.get(0);
-        source_company.setText(place.getName());
-        source_location_et.append(locale.getCountry());
-
-
-        places.release();
-    };
 
     @Override
         public void onStop() {
@@ -162,21 +94,6 @@ public class RegisterDeviceFragment extends Fragment implements FragmentLifeCycl
             ButterKnife.bind(this, ConvertView);
             initAutoCompleteTextViews();
             AddValidators(alias_name, "incorrect");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             return ConvertView;
         }
 
@@ -207,9 +124,8 @@ public class RegisterDeviceFragment extends Fragment implements FragmentLifeCycl
         textView.setAdapter(adapter);
         textView.setTextColor(Color.BLUE);
         textView.setOnItemClickListener((adapterView, view, i, l) -> {
-            final AutocompletePrediction item = adapter.getItem(i);
-            final CharSequence primaryText = item.getPrimaryText(null);
-            Log.i(TAG, "Autocomplete item selected: " + item.getFullText(null));
+            final CharSequence primaryText = adapter.getItem(i).getPrimaryText(null);
+            Log.i(TAG, "Autocomplete item selected: " + primaryText);
             textView.setText(primaryText);
 
             /*  if(s) {
@@ -273,6 +189,67 @@ public class RegisterDeviceFragment extends Fragment implements FragmentLifeCycl
                 Toast.LENGTH_SHORT).show();
 
     }
+
+   /* private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = places -> {
+        if (!places.getStatus().isSuccess()) {
+            // Request did not complete successfully
+            Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+            places.release();
+            return;
+        }
+        // Get the Place object from the buffer.
+        final Place place = places.get(0);
+        final Locale locale = place.getLocale();
+        LatLng coordinates = place.getLatLng(); // Get the coordinates from your place
+        Geocoder geocoder = new Geocoder(getContext(), locale);
+
+        List<Address> addresses = null; // Only retrieve 1 address
+        try {
+            addresses = geocoder.getFromLocation(
+                    coordinates.latitude,
+                    coordinates.longitude,
+                    1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Address address = addresses.get(0);
+        source_company.setText(place.getName());
+        source_location_et.append(locale.getCountry());
+
+
+        places.release();
+    };
+    private ResultCallback<PlaceBuffer> mUpdateCitisCallBack
+            = places -> {
+        if (!places.getStatus().isSuccess()) {
+            // Request did not complete successfully
+            Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
+            places.release();
+            return;
+        }
+        // Get the Place object from the buffer.
+        final Place place = places.get(0);
+        final Locale locale = place.getLocale();
+        LatLng coordinates = place.getLatLng(); // Get the coordinates from your place
+        Geocoder geocoder = new Geocoder(getContext(), locale);
+
+        List<Address> addresses = null; // Only retrieve 1 address
+        try {
+            addresses = geocoder.getFromLocation(
+                    coordinates.latitude,
+                    coordinates.longitude,
+                    1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Address address = addresses.get(0);
+        source_company.setText(place.getName());
+        source_location_et.append(locale.getCountry());
+
+
+        places.release();
+    };*/
 
 
 }

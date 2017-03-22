@@ -23,4 +23,6 @@ public interface AdapterComponent {
     void inject(ReportGenerationFragment reportGenerationFragment);
 
     void inject(ReportListActivity reportListActivity);
+
+
 }
