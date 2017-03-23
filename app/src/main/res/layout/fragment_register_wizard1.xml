@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/semi_transparent_black"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/full_name"
+            style="@style/StyledTilEditTextTheme1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/fullName"
+            android:inputType="textPersonName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/email"
+            style="@style/StyledTilEditTextTheme1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/password"
+            style="@style/StyledTilEditTextTheme1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_password"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/confirm_password"
+            style="@style/StyledTilEditTextTheme1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm Password"
+            android:inputType="textPersonName"
+
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/working_orginasation"
+            style="@style/StyledTilEditTextTheme1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Working Organization/Company"
+            android:inputType="textPersonName"
+
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/address"
+            style="@style/address2match"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address"
+            android:inputType="textPostalAddress"
+
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        style="@style/TextInputLayoutDesign"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.quascenta.petersroad.droidtag.widgets.FormEditText
+            android:id="@+id/state_province"
+            style="@style/address2match"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Province"
+            android:inputType="textPostalAddress"
+
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/next"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_arrow_forward_white"
+        android:visibility="visible"
+        app:backgroundTint="#70FF"
+        app:useCompatPadding="true" />
+
+
+    <!-- Link to Login Screen -->
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
+
+</LinearLayout>

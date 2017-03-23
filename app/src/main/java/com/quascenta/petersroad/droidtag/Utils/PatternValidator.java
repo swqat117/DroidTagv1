@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
  * @see RegexpValidator
  */
 public class PatternValidator extends Validator {
+    String[] blocked = {"gmail.com", "rediff.com",
+            "yahoo.com", "yahoo.in", "outlook.com", "aol.com", "yandex.com"};
     private Pattern pattern;
 
     public PatternValidator(String _customErrorMessage, Pattern _pattern) {
@@ -25,7 +27,16 @@ public class PatternValidator extends Validator {
     }
 
     public boolean isValid(EditText et) {
-        return pattern.matcher(et.getText()).matches();
+        return pattern.matcher(et.getText()).matches() & isValid1(et);
     }
 
+
+    public boolean isValid1(EditText et) {
+
+        for (String aBlocked : blocked) {
+            return !pattern.matcher(aBlocked).matches();
+        }
+        return true;
+    }
 }
+

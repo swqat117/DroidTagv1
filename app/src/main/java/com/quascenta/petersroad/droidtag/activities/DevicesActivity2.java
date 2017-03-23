@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,9 +18,6 @@ import com.quascenta.petersroad.droidtag.ViewServer;
 import com.quascenta.petersroad.droidtag.fragments.AlertListFragment;
 import com.quascenta.petersroad.droidtag.fragments.ReportGenerationFragment;
 import com.quascenta.petersroad.droidtag.widgets.CustomViewPager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by AKSHAY on 2/13/2017.
@@ -138,7 +132,7 @@ public class DevicesActivity2 extends BaseActivity {
         CustomViewPager viewPager = (CustomViewPager) findViewById(R.id.viewpagermain);
         viewPager.setPagingEnabled(false);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
+        PagerAdapter1 adapter = new PagerAdapter1(getSupportFragmentManager());
         adapter.addFragment(new AlertListFragment(), "ALERT TRACKER");
         adapter.addFragment(new ReportGenerationFragment(), "REPORT");
         viewPager.setOffscreenPageLimit(2);
@@ -164,32 +158,5 @@ public class DevicesActivity2 extends BaseActivity {
         super.onStop();
     }
 
-    static class PagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
-    }
 }

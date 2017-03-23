@@ -1,112 +1,63 @@
 package com.quascenta.petersroad.droidtag.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.support.v4.app.FragmentActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.quascenta.petersroad.droidtag.R;
+import com.quascenta.petersroad.droidtag.fragments.RegisterUserFragment;
+import com.quascenta.petersroad.droidtag.widgets.CustomViewPager;
 
 /**
  * Created by AKSHAY on 3/22/2017.
  */
 
-public class SignUpActivity extends BaseActivity {
+public class SignUpActivity extends FragmentActivity implements RegisterUserFragment.ChangePage {
 
-    private EditText inputEmail, inputPassword;
-    private Button btnSignIn, btnSignUp, btnResetPassword;
-    private ProgressBar progressBar;
-    private FirebaseAuth auth;
+
+    CustomViewPager viewPager;
+
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_registration);
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
+        viewPager = (CustomViewPager) findViewById(R.id.viewpagermain);
+        viewPager.setPagingEnabled(false);
+        PagerAdapter1 register_adapter = new PagerAdapter1(getSupportFragmentManager());
+        register_adapter.addFragment(new RegisterUserFragment(), "Registration");
+        register_adapter.addFragment(new RegisterMobileFragment(), "REPORT");
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setAdapter(register_adapter);
 
-        btnSignIn = (Button) findViewById(R.id.sign_in_button);
-        btnSignUp = (Button) findViewById(R.id.sign_up_button);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        btnResetPassword = (Button) findViewById(R.id.btn_reset_password);
 
-        btnResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignUpActivity.this, ResetPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (password.length() < 6) {
-                    Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
-                //create user
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Toast.makeText(SignUpActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(SignUpActivity.this, "Authentication failed." + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                            finish();
-                        }
-                    }
-
-                });
-
-            }
-        });
     }
+
+
+    public void nextPage(CustomViewPager viewPager) {
+
+        viewPager.setCurrentItem(1);
+
+    }
+
+    public void previousPage(CustomViewPager viewPager) {
+
+        viewPager.setCurrentItem(0);
+
+    }
+
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        progressBar.setVisibility(View.GONE);
+    public void i() {
+        nextPage(viewPager);
     }
 }
+
+
+
+
+
+

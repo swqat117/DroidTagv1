@@ -18,6 +18,8 @@ public interface RegisterContract {
 
     interface Presenter {
         void register(Activity activity, String email, String password);
+
+        void sendString(String message);
     }
 
     interface Interactor {

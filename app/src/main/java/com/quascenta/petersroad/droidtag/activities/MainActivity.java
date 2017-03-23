@@ -13,9 +13,6 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -41,9 +38,6 @@ import org.greenrobot.eventbus.EventBusException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,7 +53,7 @@ public class MainActivity extends BaseActivity implements EventListener{
     public static int SCAN_DEVICE = 0;
     protected static String uuidQppService = "0000fee9-0000-1000-8000-00805f9b34fb";
     protected static String uuidQppCharWrite = "d44bc439-abfd-45a2-b575-925416129600";
-    PagerAdapter adapter;
+    PagerAdapter1 adapter;
     EventListener listener;
     BleDevice temp;
     @Bind(R.id.btn_next)
@@ -239,7 +233,7 @@ public class MainActivity extends BaseActivity implements EventListener{
 
         viewPager = (CustomViewPager) findViewById(R.id.view_pager);
         viewPager.setPagingEnabled(false);
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
+        PagerAdapter1 adapter = new PagerAdapter1(getSupportFragmentManager());
         adapter.addFragment(fragment, "Scan Loggers");
         adapter.addFragment(fragment1, "REPORT");
         skip.setVisibility(View.INVISIBLE);
@@ -300,36 +294,7 @@ public class MainActivity extends BaseActivity implements EventListener{
     }
 
 
-    public class PagerAdapter extends FragmentStatePagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public PagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
-
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
-    }
 
     class ProgressOperation extends AsyncTask<Void, String, Void> {
         ProgressDialog progressDialog;
