@@ -122,10 +122,16 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
             Log.i(TAG, "---> getUserCredentials() ---> Email and password passed to the presenter");
                 progressBar.setVisibility(View.VISIBLE);
         } else if (attempts_failed_login > MAX_NUMBER_OF_ATTEMPTS) {
+
+
             Log.e(TAG, "---> getUserCredentials ---> Disabling login button contact admin");
             Toast.makeText(this, "---> getUserCredentials() ---> Disabling Login . Please contact the admin", Toast.LENGTH_SHORT).show();
+
+
             login_bt.setEnabled(false);
-            } else {
+
+
+        } else {
             Log.e(TAG, "---> getUserCredentials ---> Invalid attempt count = " + attempts_failed_login);
         }
 

@@ -9,6 +9,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 /**
  * Created by AKSHAY on 3/23/2017.
  */
@@ -26,9 +28,9 @@ public class RegisterInteractor implements RegisterContract.Interactor {
 
 
     @Override
-    public void performFirebaseRegistration(Activity activity, final String email, String password) {
+    public void performFirebaseRegistration(Activity activity, final ArrayList<String> arrayList) {
         FirebaseAuth.getInstance()
-                .createUserWithEmailAndPassword(email, password)
+                .createUserWithEmailAndPassword(arrayList.get(0), arrayList.get(1))
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -41,9 +43,9 @@ public class RegisterInteractor implements RegisterContract.Interactor {
                             mOnRegistrationListener.onFailure(task.getException().getMessage());
                         } else {
                             // Add the user to users table.
-                            /*DatabaseReference database= FirebaseDatabase.getInstance().getReference();
-                            User user = new User(task.getResult().getUser().getUid(), email);
-                            database.child("users").push().setValue(user);*/
+                            //        DatabaseReference database= FirebaseDatabase.getInstance().getReference();
+                            //         User user = new User(task.getResult().getUser().getUid(), email);
+                            //         database.child("users").push().setValue(user);
 
                             mOnRegistrationListener.onSuccess(task.getResult().getUser());
                         }

@@ -3,7 +3,6 @@ package com.quascenta.petersroad.droidtag.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +13,12 @@ import com.quascenta.petersroad.droidtag.R;
 import com.quascenta.petersroad.droidtag.Utils.AlphaNumericValidator;
 import com.quascenta.petersroad.droidtag.Utils.AlphaValidator;
 import com.quascenta.petersroad.droidtag.Utils.AndValidator;
+import com.quascenta.petersroad.droidtag.Utils.EmailValidator;
 import com.quascenta.petersroad.droidtag.Utils.EmptyValidator;
+import com.quascenta.petersroad.droidtag.Utils.NumericValidator;
 import com.quascenta.petersroad.droidtag.core.RegisterContract;
 import com.quascenta.petersroad.droidtag.core.RegisterPresenter;
+import com.quascenta.petersroad.droidtag.widgets.FormAutoCompleteTextView;
 import com.quascenta.petersroad.droidtag.widgets.FormEditText;
 
 import butterknife.Bind;
@@ -44,8 +46,8 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
     @Bind(R.id.confirm_password)
     FormEditText confirm_password_et;
 
-    @Bind(R.id.next)
-    FloatingActionButton button;
+    @Bind(R.id.email)
+    FormEditText email_et;
 
     @Bind(R.id.working_orginasation)
     FormEditText company_name_et;
@@ -56,6 +58,12 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
     @Bind(R.id.state_province)
     FormEditText state_et;
 
+    @Bind(R.id.country_code)
+    FormAutoCompleteTextView country_code_tv;
+
+    @Bind(R.id.mobile_number)
+    FormEditText mobile_number_et;
+
     RegisterPresenter presenter;
 
     @OnClick(R.id.next)
@@ -63,13 +71,14 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
         if (testValidity()) {
 
             if (password_et.getText().toString().equals(confirm_password_et.getText().toString())) {
-                presenter.sendString(user_name_et.getText().toString());
+                presenter.sendString(email_et.getText().toString());
                 presenter.sendString(password_et.getText().toString());
+                presenter.sendString(user_name_et.getText().toString());
                 presenter.sendString(company_name_et.getText().toString());
                 presenter.sendString(company_address_et.getText().toString());
                 presenter.sendString(state_et.getText().toString());
-
-
+                presenter.sendString("+91" + mobile_number_et.getText().toString());
+                presenter.register(getActivity());
             }
 
         }
@@ -106,12 +115,14 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
 
     public void addValidators(String errorMessage) {
 
-
-        user_name_et.addValidator(new AndValidator(errorMessage, new AlphaValidator(errorMessage), new EmptyValidator("Field is Empty")));
+        email_et.addValidator(new AndValidator(errorMessage, new EmailValidator("Invalid Format"), new EmptyValidator("Please enter your Email id")));
         password_et.addValidator(new AndValidator(errorMessage, new AlphaNumericValidator(errorMessage), new EmptyValidator("Field is Empty")));
+        user_name_et.addValidator(new AndValidator(errorMessage, new AlphaValidator(errorMessage), new EmptyValidator("Field is Empty")));
         company_name_et.addValidator(new AndValidator(errorMessage, new AlphaNumericValidator(errorMessage), new EmptyValidator("Field is Empty")));
         company_address_et.addValidator(new EmptyValidator("Field is Empty"));
         state_et.addValidator(new AndValidator(errorMessage, new AlphaValidator(errorMessage), new EmptyValidator("Field is Empty")));
+        mobile_number_et.addValidator(new NumericValidator("No alpha chars"));
+        mobile_number_et.addValidator(new EmptyValidator("field is empty"));
 
 
     }
@@ -121,11 +132,13 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
 
 
         boolean test1 = user_name_et.testValidity();
-        boolean test2 = password_et.testValidity();
+        boolean test2 = password_et.testValidity() & password_et.getText().toString().equals(confirm_password_et.getText().toString());
         boolean test3 = company_name_et.testValidity();
         boolean test4 = company_address_et.testValidity();
         boolean test5 = state_et.testValidity();
         boolean test6 = user_name_et.testValidity();
+        boolean test7 = email_et.testValidity();
+        boolean test9 = mobile_number_et.testValidity();
 
 
         return test1 & test2 & test3 & test4 & test5 & test6;

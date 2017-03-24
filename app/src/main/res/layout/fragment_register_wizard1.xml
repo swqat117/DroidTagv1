@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/semi_transparent_black"
+
+    >
+
+    <LinearLayout
+
+    android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#0000"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin">
 
+
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/full_name"
@@ -28,7 +38,8 @@
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/email"
@@ -43,7 +54,8 @@
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/password"
@@ -58,7 +70,8 @@
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/confirm_password"
@@ -74,7 +87,8 @@
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/working_orginasation"
@@ -90,8 +104,10 @@
 
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/address"
@@ -108,7 +124,8 @@
     <android.support.design.widget.TextInputLayout
         style="@style/TextInputLayoutDesign"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
 
         <com.quascenta.petersroad.droidtag.widgets.FormEditText
             android:id="@+id/state_province"
@@ -122,17 +139,43 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/next"
+        <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_arrow_forward_white"
-        android:visibility="visible"
-        app:backgroundTint="#70FF"
-        app:useCompatPadding="true" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutDesign"
+                android:layout_width="150dip"
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+                <com.quascenta.petersroad.droidtag.widgets.FormAutoCompleteTextView
+                    android:id="@+id/country_code"
+                    style="@style/Mobile1_number_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Code" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                style="@style/TextInputLayoutDesign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/TextAppearance.App.TextInputLayout">
+
+                <com.quascenta.petersroad.droidtag.widgets.FormAutoCompleteTextView
+                    android:id="@+id/mobile_number"
+                    style="@style/StyledTilEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile No." />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
 
 
-    <!-- Link to Login Screen -->
+        <!-- Link to Login Screen -->
 
 
     <ProgressBar
@@ -144,3 +187,4 @@
         android:visibility="gone" />
 
 </LinearLayout>
+</ScrollView>
