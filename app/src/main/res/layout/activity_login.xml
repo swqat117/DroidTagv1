@@ -27,8 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <com.quascenta.petersroad.droidtag.widgets.FormEditText
                 android:id="@+id/email"
+                style="@style/StyledTilEditTextLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -43,13 +44,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
+            <com.quascenta.petersroad.droidtag.widgets.FormEditText
                 android:id="@+id/password"
+                style="@style/StyledTilEditTextLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:hint="@string/hint_password"
                 android:inputType="textPassword"
+
                 android:textColor="@android:color/white"
                 android:textColorHint="@android:color/white" />
         </android.support.design.widget.TextInputLayout>
@@ -93,7 +96,7 @@
         android:id="@+id/progressBar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="20dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="72dp"
         android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>

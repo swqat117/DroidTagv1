@@ -41,11 +41,11 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
 
     @Override
     public void onSuccess(FirebaseUser firebaseUser) {
-
+        mRegisterView.onRegistrationSuccess(firebaseUser);
     }
 
     @Override
     public void onFailure(String message) {
-
+        mRegisterView.onRegistrationFailure(message);
     }
 }

@@ -3,7 +3,10 @@ package com.quascenta.petersroad.droidtag.core;
 /**
  * Created by AKSHAY on 3/24/2017.
  */
-public class User {
+public class UserViewModel {
+
+    private final String userid;
+
 
     private String username;
 
@@ -20,13 +23,11 @@ public class User {
     private String mobile_no;
 
 
-    public User(String username, String password, String work_company, String address, String state_province, String country_code, String mobile_number) {
+    public UserViewModel(String username, String userid, String password, String mobile_number) {
+
         this.username = username;
+        this.userid = userid;
         this.hashValue = password;
-        this.work_company = work_company;
-        this.address = address;
-        this.state_province = state_province;
-        this.country_code = country_code;
         this.mobile_no = mobile_number;
 
     }
@@ -58,6 +59,7 @@ public class User {
 
     public String getMobile_no() {
         return mobile_no;
+
     }
 
     public void setMobile_no(String mobile_no) {

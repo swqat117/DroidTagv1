@@ -57,14 +57,7 @@ public class RegisterDeviceFragment extends Fragment implements FragmentLifeCycl
     FormAutoCompleteTextView source_location_et;
     @Bind(R.id.destination_location_et)
     FormAutoCompleteTextView destination_location_et;
-    @Bind(R.id.upper_limit_et)
-    FormEditText temp_upper_limit;
-    @Bind(R.id.lower_limit_et)
-    FormEditText temp_lower_limit;
-    @Bind(R.id.upper_limit_rh_et)
-    FormEditText rh_upper_limit;
-    @Bind(R.id.lower_limit_rh_et)
-    FormEditText rh_lower_limit;
+
     String country;
     // TO PROVIDE MORE INFORMATION ABOUT THE RESULT SET (GOOGLE PLACES API ) , NOT REQUIRED RIGHT NOW
 
@@ -90,7 +83,7 @@ public class RegisterDeviceFragment extends Fragment implements FragmentLifeCycl
                     .enableAutoManage(getActivity(), 0 /* clientId */, this)
                     .addApi(Places.GEO_DATA_API)
                     .build();
-            View ConvertView = inflater.inflate(R.layout.fragment_register2, container, false);
+            View ConvertView = inflater.inflate(R.layout.fragment_register, container, false);
             ButterKnife.bind(this, ConvertView);
             initAutoCompleteTextViews();
             AddValidators(alias_name, "incorrect");

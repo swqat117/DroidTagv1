@@ -6,9 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
-
 
 import com.quascenta.petersroad.droidtag.Utils.Validator;
 
@@ -21,6 +21,12 @@ import java.lang.reflect.Method;
  * @author Andrea Baccega <me@andreabaccega.com>
  */
 public class FormEditText extends EditText {
+    private EditTextValidator editTextValidator;
+    /**
+     * Keep track of which icon we used last
+     */
+    private Drawable lastErrorIcon = null;
+
     public FormEditText(Context context) {
         super(context);
         //support dynamic new FormEditText(context)
@@ -59,21 +65,14 @@ public class FormEditText extends EditText {
 
     /**
      * Calling *testValidity()* will cause the EditText to go through
-     * customValidators and call {@link com.andreabaccega.formedittextvalidator.Validator#isValid(EditText)}
+     * customValidators and call {@link (EditText)}
      *
      * @return true if the validity passes false otherwise.
      */
     public boolean testValidity() {
+        Log.d("Validity CHECK", String.valueOf(editTextValidator.testValidity()));
         return editTextValidator.testValidity();
     }
-
-    private EditTextValidator editTextValidator;
-
-
-    /**
-     * Keep track of which icon we used last
-     */
-    private Drawable lastErrorIcon = null;
 
     /**
      * Don't send delete key so edit text doesn't capture it and close error

@@ -27,16 +27,9 @@ public class PatternValidator extends Validator {
     }
 
     public boolean isValid(EditText et) {
-        return pattern.matcher(et.getText()).matches() & isValid1(et);
+        return pattern.matcher(et.getText()).matches();
     }
 
 
-    public boolean isValid1(EditText et) {
-
-        for (String aBlocked : blocked) {
-            return !pattern.matcher(aBlocked).matches();
-        }
-        return true;
-    }
 }
 

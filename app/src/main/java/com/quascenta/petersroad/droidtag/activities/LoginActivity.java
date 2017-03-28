@@ -13,6 +13,7 @@ import com.quascenta.petersroad.droidtag.R;
 import com.quascenta.petersroad.droidtag.Utils.AndValidator;
 import com.quascenta.petersroad.droidtag.Utils.EmailValidator;
 import com.quascenta.petersroad.droidtag.Utils.EmptyValidator;
+import com.quascenta.petersroad.droidtag.Utils.RegexpValidator;
 import com.quascenta.petersroad.droidtag.core.LoginContract;
 import com.quascenta.petersroad.droidtag.core.LoginPresenter;
 import com.quascenta.petersroad.droidtag.widgets.FormEditText;
@@ -34,8 +35,11 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     private static final int MAX_NUMBER_OF_ATTEMPTS = 3;
     @Bind(R.id.email)
     FormEditText inputEmail;
+
     @Bind(R.id.password)
     FormEditText password_et;
+
+
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
     @Bind(R.id.btn_signup)
@@ -45,7 +49,8 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Bind(R.id.btn_reset_password)
     Button reset_password_bt;
     LoginPresenter loginPresenter;
-    private int attempts_failed_login = 0;
+    int attempts_failed_login;
+
 
     @OnClick(R.id.btn_reset_password)
     public void loadResetPassword() {
@@ -64,6 +69,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     @OnClick(R.id.btn_login)
     public void ValidateLogin() {
+        attempts_failed_login = attempts_failed_login + 1;
         progressBar.setVisibility(View.VISIBLE);
         Log.i(TAG, "---> onClick() ---> getUserCredentials() ");
         getUserCredentials(inputEmail, password_et, "Error:", progressBar);
@@ -80,6 +86,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
         Log.i(TAG, "init onCreate()");
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        attempts_failed_login = 0;
         loginPresenter = new LoginPresenter(this);
         ifUserExistsLoadMain();
 
@@ -96,17 +103,17 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     @Override
     public void onLoginFailure(String message) {
         progressBar.setVisibility(View.GONE);
-        attempts_failed_login++;
+        ++attempts_failed_login;
         Log.e(TAG, "---> FireBase -->onLoginFailiure() " + attempts_failed_login);
 
         if (attempts_failed_login > MAX_NUMBER_OF_ATTEMPTS) {
             Log.e(TAG, "---> Disabling login button contact admin");
             Toast.makeText(this, "Disabling Login . Please contact the admin", Toast.LENGTH_SHORT).show();
             login_bt.setEnabled(false);
-
+            Log.i(TAG, "---> onClick reset ---> Loading reset Password");
+            startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
             // TODO:Technically need to start a delay service for a single day (24 hours) and then enable login button
             //For now setting attempts_failed_login to 0
-            attempts_failed_login = 0;
 
         }
     }
@@ -115,7 +122,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
     public void getUserCredentials(FormEditText username_et, FormEditText password_et, String error_message, ProgressBar progressBar) {
 
 
-        attempts_failed_login = validate(username_et, password_et, error_message) ? attempts_failed_login++ : 0;
+        attempts_failed_login = validate(username_et, password_et, error_message) ? 0 : attempts_failed_login;
 
         if (attempts_failed_login == 0) {
             loginPresenter.login(this, username_et.getText().toString(), password_et.getText().toString());
@@ -125,10 +132,10 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
 
             Log.e(TAG, "---> getUserCredentials ---> Disabling login button contact admin");
-            Toast.makeText(this, "---> getUserCredentials() ---> Disabling Login . Please contact the admin", Toast.LENGTH_SHORT).show();
-
-
+            Toast.makeText(this, "Disabling Login . Please contact the admin", Toast.LENGTH_SHORT).show();
             login_bt.setEnabled(false);
+            Log.i(TAG, "---> onClick reset ---> Loading reset Password");
+            startActivity(new Intent(LoginActivity.this, ResetPasswordActivity.class));
 
 
         } else {
@@ -140,7 +147,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View {
 
     public boolean validate(FormEditText username_et, FormEditText password_et, String error_message) {
 
-        username_et.addValidator(new AndValidator(error_message, new EmailValidator("Invalid Format"), new EmptyValidator("Please enter your Email id")));
+        username_et.addValidator(new AndValidator(error_message, new EmailValidator("Invalid Format"), new EmptyValidator("Please enter your Email id"), new RegexpValidator(error_message, "gmail.com"), new RegexpValidator(error_message, "hotmail.com"), new RegexpValidator(error_message, "yahoo.com"), new RegexpValidator(error_message, "rediff.com"), new RegexpValidator(error_message, "aol.com"), new RegexpValidator(error_message, "outlook.com")));
         password_et.addValidator(new EmptyValidator("Please enter your password"));
         Log.i(TAG, "---> Validators() ---> added");
         return (username_et.testValidity() && password_et.testValidity());

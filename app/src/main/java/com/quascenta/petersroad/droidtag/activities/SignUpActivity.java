@@ -1,24 +1,35 @@
 package com.quascenta.petersroad.droidtag.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.design.widget.FloatingActionButton;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.quascenta.petersroad.droidtag.R;
-import com.quascenta.petersroad.droidtag.core.RegisterContract;
 import com.quascenta.petersroad.droidtag.fragments.RegisterUserFragment;
-import com.quascenta.petersroad.droidtag.widgets.CustomViewPager;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by AKSHAY on 3/22/2017.
  */
 
-public class SignUpActivity extends FragmentActivity implements RegisterContract.View {
+public class SignUpActivity extends BaseActivity {
 
 
-    CustomViewPager viewPager;
+    RegisterUserFragment userFragment;
 
 
+    @Bind(R.id.next)
+    FloatingActionButton next;
+
+
+    @OnClick(R.id.next)
+    public void click() {
+        System.out.println("pass");
+        userFragment.prepareData();
+
+    }
 
 
 
@@ -26,25 +37,16 @@ public class SignUpActivity extends FragmentActivity implements RegisterContract
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        viewPager = (CustomViewPager) findViewById(R.id.viewpagermain);
-        viewPager.setPagingEnabled(false);
-        PagerAdapter1 register_adapter = new PagerAdapter1(getSupportFragmentManager());
-        register_adapter.addFragment(new RegisterUserFragment(), "Registration");
-        viewPager.setOffscreenPageLimit(1);
-        viewPager.setAdapter(register_adapter);
+        ButterKnife.bind(this);
+        userFragment = new RegisterUserFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.viewpagermain, userFragment).commit();
 
 
-    }
-
-    @Override
-    public void onRegistrationSuccess(FirebaseUser firebaseUser) {
 
     }
 
-    @Override
-    public void onRegistrationFailure(String message) {
 
-    }
 }
 
 

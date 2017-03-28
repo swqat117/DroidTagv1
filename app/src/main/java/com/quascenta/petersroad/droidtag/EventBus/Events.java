@@ -158,4 +158,25 @@ public class Events {
 
     }
 
+
+    public static class SendString {
+
+
+        private String content;
+
+        public SendString(String content) {
+            this.content = content;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+
+    }
+
 }
