@@ -2,20 +2,22 @@ package com.quascenta.petersroad.droidtag.core;
 
 import org.joda.time.DateTime;
 
+import java.util.HashMap;
+
 /**
  * Created by AKSHAY on 3/27/2017.
  */
 
 public class CompanyModel {
 
-    int status_code;
-    int request_code;
-    DateTime registeration_date;
-    private String company_name;
-    private String company_address;
-    private String company_domain;
-    private String company_state;
-    private String company_city;
+    private String registeration_date;
+    private String name;
+    private String address;
+    private String state;
+    private String city;
+    private String country;
+    private String numberid;
+    private HashMap<String, String> user;
 
     /*
     *       Status code
@@ -40,119 +42,86 @@ public class CompanyModel {
     *
     *
      */
-    private String company_mobile_number;
-    private String alterneate_mobile_number;
-    private UserCollection userCollection;
 
+    public CompanyModel(String name, String address, String mobile1, HashMap<String, String> user) {
 
-    public CompanyModel(String name, String address, String domain_name, String state, String city, String mobile1, String mobile2, int status_code, int request_code) {
-
-        this.company_name = name;
-        this.company_address = address;
-        this.company_domain = domain_name;
-        this.company_state = state;
-        this.company_city = city;
-        this.company_mobile_number = mobile1;
-        this.alterneate_mobile_number = mobile2;
-        this.status_code = status_code;
-        this.request_code = request_code;
-        this.registeration_date = DateTime.now();
-        userCollection = new UserCollection();
-
+        this.name = name;
+        this.address = address;
+        this.numberid = mobile1;
+        this.registeration_date = DateTime.now().toString();
+        this.user = user;
 
     }
 
-    public String getAlterneate_mobile_number() {
-        return alterneate_mobile_number;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAlterneate_mobile_number(String alterneate_mobile_number) {
-        this.alterneate_mobile_number = alterneate_mobile_number;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public String getCompany_address() {
-        return company_address;
+    public String getCity() {
+        return city;
     }
 
-    public void setCompany_address(String company_address) {
-        this.company_address = company_address;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getCompany_city() {
-        return company_city;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCompany_city(String company_city) {
-        this.company_city = company_city;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getCompany_domain() {
-        return company_domain;
+    public String getName() {
+        return name;
     }
 
-    public void setCompany_domain(String company_domain) {
-        this.company_domain = company_domain;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getCompany_mobile_number() {
-        return company_mobile_number;
+    public String getNumberid() {
+        return numberid;
     }
 
-    public void setCompany_mobile_number(String company_mobile_number) {
-        this.company_mobile_number = company_mobile_number;
+    public void setNumberid(String numberid) {
+        this.numberid = numberid;
     }
 
-    public String getCompany_name() {
-        return company_name;
-    }
-
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
-    }
-
-    public String getCompany_state() {
-        return company_state;
-    }
-
-    public void setCompany_state(String company_state) {
-        this.company_state = company_state;
-    }
-
-    public DateTime getRegisteration_date() {
+    public String getRegisteration_date() {
         return registeration_date;
     }
 
-    public void setRegisteration_date(DateTime registeration_date) {
+    public void setRegisteration_date(String registeration_date) {
         this.registeration_date = registeration_date;
     }
 
-    public int getRequest_code() {
-        return request_code;
+    public String getState() {
+        return state;
     }
 
-    public void setRequest_code(int request_code) {
-        this.request_code = request_code;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public int getStatus_code() {
-        return status_code;
+    public HashMap<String, String> getUser() {
+        return user;
     }
 
-    public void setStatus_code(int status_code) {
-        this.status_code = status_code;
+    public void setUser(HashMap<String, String> user) {
+        this.user = user;
     }
 
-    public UserCollection getUserCollection() {
-        return userCollection;
-    }
 
-    public void setUserCollection(UserCollection userCollection) {
-        this.userCollection = userCollection;
-    }
 
-    public void addUser(UserViewModel sensorViewModel) {
-        userCollection.add(sensorViewModel);
-    }
+
+
+
 
 
 }

@@ -1,8 +1,10 @@
 package com.quascenta.petersroad.droidtag.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +24,9 @@ import com.quascenta.petersroad.droidtag.Utils.EmailValidator;
 import com.quascenta.petersroad.droidtag.Utils.EmptyValidator;
 import com.quascenta.petersroad.droidtag.Utils.NumericValidator;
 import com.quascenta.petersroad.droidtag.Utils.SameValueValidator;
-import com.quascenta.petersroad.droidtag.core.RegisterContract;
-import com.quascenta.petersroad.droidtag.core.RegisterPresenter;
+import com.quascenta.petersroad.droidtag.activities.LoginActivity;
+import com.quascenta.petersroad.droidtag.core.RegsiterCore.RegisterContract;
+import com.quascenta.petersroad.droidtag.core.RegsiterCore.RegisterPresenter;
 import com.quascenta.petersroad.droidtag.widgets.FormAutoCompleteTextView;
 import com.quascenta.petersroad.droidtag.widgets.FormEditText;
 
@@ -87,13 +90,15 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
 
 
     public boolean prepareData() {
-        p.setMessage("Saving PDF to Disk");
+        p.setMessage("Validating Data. please wait..");
         p.setIndeterminate(false);
         p.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         p.setCancelable(false);
         p.show();
         if (testValidity()) {
             if (new EmailProviderValidator(email_et).isValid()) {
+                p.setMessage("Validated . please wait.");
+                p.setMessage("Pushing . please wait..");
                 presenter.sendString(email_et.getText().toString());
                 presenter.sendString(password_et.getText().toString());
                 presenter.sendString(user_name_et.getText().toString());
@@ -147,7 +152,7 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
     public void addValidators(String errorMessage, String error_message) {
 
         email_et.addTextChangedListener(new TextObservables("em", email_et, new AndValidator(error_message, new EmailValidator("Invalid email format"), new EmptyValidator("Please enter your Email id"))));
-        password_et.addTextChangedListener(new TextObservables("error", password_et, new AndValidator(error_message, new AlphaNumericValidator(error_message), new EmptyValidator("Field is Empty"))));
+        password_et.addTextChangedListener(new TextObservables("error", password_et, new AndValidator(error_message, new EmptyValidator("Field is Empty"))));
         user_name_et.addTextChangedListener(new TextObservables("error", user_name_et, new AndValidator(error_message, new AlphaValidator(error_message), new EmptyValidator("Field is Empty"))));
         company_name_et.addTextChangedListener(new TextObservables("error", company_name_et, new AndValidator(error_message, new AlphaNumericValidator(error_message), new EmptyValidator("Field is Empty"))));
         company_address_et.addTextChangedListener(new TextObservables("error", company_address_et, new EmptyValidator("Field is Empty")));
@@ -178,15 +183,22 @@ public class RegisterUserFragment extends Fragment implements RegisterContract.V
     @Override
     public void onRegistrationSuccess(FirebaseUser firebaseUser) {
         p.dismiss();
+        Snackbar.make(getView(), "Verification email is sent to" + firebaseUser.getEmail(), Snackbar.LENGTH_LONG).show();
+        startActivity(new Intent(getActivity(), LoginActivity.class));
         Log.d(TAG, "Registration Succeeded");
-        Log.d(TAG, firebaseUser.getDisplayName());
-        Log.d(TAG, "Registration Succeeded");
+
+    }
+
+    @Override
+    public void onProgress(String message) {
+        p.setMessage(message);
     }
 
     @Override
     public void onRegistrationFailure(String message) {
+        Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
         p.dismiss();
-        Log.d(TAG, "Registration failed " + message);
+
     }
 
 

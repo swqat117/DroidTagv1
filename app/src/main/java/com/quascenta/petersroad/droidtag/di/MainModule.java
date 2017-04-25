@@ -17,7 +17,7 @@ import dagger.Provides;
  */
 
 
-@Module()
+@Module
 public class MainModule {
 
 

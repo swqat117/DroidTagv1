@@ -2,6 +2,7 @@ package com.quascenta.petersroad.droidtag.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.view.View;
 
 import com.quascenta.petersroad.droidtag.R;
 import com.quascenta.petersroad.droidtag.fragments.RegisterUserFragment;
@@ -19,6 +20,9 @@ public class SignUpActivity extends BaseActivity {
 
     RegisterUserFragment userFragment;
 
+    @Bind(R.id.main_content)
+    View main_content;
+
 
     @Bind(R.id.next)
     FloatingActionButton next;
@@ -26,8 +30,8 @@ public class SignUpActivity extends BaseActivity {
 
     @OnClick(R.id.next)
     public void click() {
-        System.out.println("pass");
         userFragment.prepareData();
+
 
     }
 
@@ -38,6 +42,7 @@ public class SignUpActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         ButterKnife.bind(this);
+
         userFragment = new RegisterUserFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.viewpagermain, userFragment).commit();

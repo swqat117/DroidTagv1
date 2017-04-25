@@ -58,9 +58,7 @@ public class BluetoothLeService extends Service {
                 broadcastUpdate(intentAction);
                 Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
-                Log.i(TAG, "Attempting to start service discovery:" +
-                        mBluetoothGatt.discoverServices());
-
+                Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt.discoverServices());
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
@@ -88,8 +86,7 @@ public class BluetoothLeService extends Service {
         }
 
         @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt,
-                                            BluetoothGattCharacteristic characteristic) {
+        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
@@ -147,9 +144,10 @@ public class BluetoothLeService extends Service {
     }
 
     /**
-     * Initializes a reference to the local Bluetooth adapter.
-     *
-     * @return Return true if the initialization is successful.
+     * -     * Initializes a reference to the local Bluetooth adapter.
+     * -     *
+     * -     * @return Return true if the initialization is successful.
+     * -
      */
     public boolean initialize() {
         // For API level 18 and above, get a reference to BluetoothAdapter through
@@ -172,23 +170,23 @@ public class BluetoothLeService extends Service {
     }
 
     /**
-     * Connects to the GATT server hosted on the Bluetooth LE device.
-     *
-     * @param address The device address of the destination device.
-     * @return Return true if the connection is initiated successfully. The connection result
-     * is reported asynchronously through the
-     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     * callback.
+     * -     * Connects to the GATT server hosted on the Bluetooth LE device.
+     * -     *
+     * -     * @param address The device address of the destination device.
+     * -     *
+     * -     * @return Return true if the connection is initiated successfully. The connection result
+     * -     *         is reported asynchronously through the
+     * -     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * -     *         callback.
+     * -
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
         }
-
         // Previously connected device.  Try to reconnect.
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
-                && mBluetoothGatt != null) {
+        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
@@ -213,10 +211,11 @@ public class BluetoothLeService extends Service {
     }
 
     /**
-     * Disconnects an existing connection or cancel a pending connection. The disconnection result
-     * is reported asynchronously through the
-     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     * callback.
+     * -     * Disconnects an existing connection or cancel a pending connection. The disconnection result
+     * -     * is reported asynchronously through the
+     * -     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * -     * callback.
+     * -
      */
     public void disconnect() {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
@@ -227,8 +226,9 @@ public class BluetoothLeService extends Service {
     }
 
     /**
-     * After using a given BLE device, the app must call this method to ensure resources are
-     * released properly.
+     * -     * After using a given BLE device, the app must call this method to ensure resources are
+     * -     * released properly.
+     * -
      */
     public void close() {
         if (mBluetoothGatt == null) {
@@ -239,11 +239,12 @@ public class BluetoothLeService extends Service {
     }
 
     /**
-     * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
-     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
-     * callback.
-     *
-     * @param characteristic The characteristic to read from.
+     * -     * Request a read on a given {@code BluetoothGattCharacteristic}. The read result is reported
+     * -     * asynchronously through the {@code BluetoothGattCallback#onCharacteristicRead(android.bluetooth.BluetoothGatt, android.bluetooth.BluetoothGattCharacteristic, int)}
+     * -     * callback.
+     * -     *
+     * -     * @param characteristic The characteristic to read from.
+     * -
      */
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
@@ -254,13 +255,13 @@ public class BluetoothLeService extends Service {
     }
 
     /**
-     * Enables or disables notification on a give characteristic.
-     *
-     * @param characteristic Characteristic to act on.
-     * @param enabled        If true, enable notification.  False otherwise.
+     * -     * Enables or disables notification on a give characteristic.
+     * -     *
+     * -     * @param characteristic Characteristic to act on.
+     * -     * @param enabled If true, enable notification.  False otherwise.
+     * -
      */
-    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
-                                              boolean enabled) {
+    public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic, boolean enabled) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
@@ -278,9 +279,10 @@ public class BluetoothLeService extends Service {
 
     /**
      * Retrieves a list of supported GATT services on the connected device. This should be
-     * invoked only after {@code BluetoothGatt#discoverServices()} completes successfully.
-     *
-     * @return A {@code List} of supported services.
+     * -     * invoked only after {@code BluetoothGatt#discoverServices()} completes successfully.
+     * -     *
+     * -     * @return A {@code List} of supported services.
+     * -
      */
     public List<BluetoothGattService> getSupportedGattServices() {
         if (mBluetoothGatt == null) return null;
@@ -289,7 +291,7 @@ public class BluetoothLeService extends Service {
     }
 
     public class LocalBinder extends Binder {
-        public BluetoothLeService getService() {
+        BluetoothLeService getService() {
             return BluetoothLeService.this;
         }
     }

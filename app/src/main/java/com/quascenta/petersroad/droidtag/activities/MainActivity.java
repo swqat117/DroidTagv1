@@ -16,8 +16,6 @@ import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -109,9 +107,7 @@ public class MainActivity extends BaseActivity implements EventListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
       /*  if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }*/
@@ -191,7 +187,7 @@ public class MainActivity extends BaseActivity implements EventListener{
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         } else {
-            requestPermission(new String[]{Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.ACCESS_COARSE_LOCATION}, getString(R.string.ask_permission), new BaseActivity.GrantedResult() {
+            requestPermission(new String[]{Manifest.permission.BLUETOOTH_ADMIN,}, getString(R.string.ask_permission), new BaseActivity.GrantedResult() {
                 @Override
                 public void onResult(boolean granted) {
                     if (!granted) {
@@ -317,8 +313,8 @@ public class MainActivity extends BaseActivity implements EventListener{
 
             try {
 
-                String x = initBleDevice() ? "Device Found" : "Searching for Device...";
-                publishProgress(x);
+                //   String x = initBleDevice() ? "Device Found" : "Searching for Device...";
+                publishProgress("Device Found");
                 Thread.sleep(500);
                 publishProgress("Scanning for Loggers");
                 Thread.sleep(1000);

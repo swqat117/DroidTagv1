@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
@@ -28,6 +29,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB58vVw9DHv54qWJi2LFr-Sk0MxMsocq4g" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -46,37 +48,24 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-
-
         <activity
             android:name=".activities.ResetPasswordActivity"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".activities.SignUpActivity"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".activities.DevicesActivity"
             android:label="Droidvice" />
-
-
         <activity
             android:name=".activities.DevicesActivity2"
             android:label="Droidvice"
-            android:screenOrientation="portrait">
-
-        </activity>
-
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.DevicesActivity1"
             android:label="Droidvice" />
-
-
         <activity
             android:name=".activities.ReportListActivity"
             android:label="@string/title_activity_report_list"
@@ -87,14 +76,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.quascenta.petersroad.droidtag.activities.DevicesActivity2" />
         </activity>
-
-
-        <activity android:name=".activities.MainActivity"
+        <activity
+            android:name=".activities.MainActivity"
             android:label="@string/title_activity_report_list"
-            android:screenOrientation="portrait"
-           >
-        </activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.RegisterDeviceActivity"
+            android:screenOrientation="portrait" />
 
+        <service
+            android:name=".main.BluetoothLeService"
+            android:enabled="true" />
 
     </application>
 

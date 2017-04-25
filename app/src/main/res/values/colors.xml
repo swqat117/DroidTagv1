@@ -27,4 +27,6 @@
     <color name="indicator_blue_shade_light">#717FB6</color>
     <color name="indicator_blue_shade_dark">#0B1A55</color>
     <color name="transparent_shade">#7fdabe83</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

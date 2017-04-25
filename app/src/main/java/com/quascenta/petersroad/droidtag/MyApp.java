@@ -2,6 +2,7 @@ package com.quascenta.petersroad.droidtag;
 
 import android.app.Application;
 
+import com.google.firebase.database.FirebaseDatabase;
 import com.quascenta.petersroad.droidtag.di.AdapterComponent;
 import com.quascenta.petersroad.droidtag.di.DaggerAdapterComponent;
 import com.quascenta.petersroad.droidtag.di.MainModule;
@@ -11,6 +12,8 @@ import com.quascenta.petersroad.droidtag.di.MainModule;
  */
 
 public class MyApp extends Application {
+
+
     private AdapterComponent component;
 
     public AdapterComponent getComponent() {
@@ -25,6 +28,10 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         component = DaggerAdapterComponent.builder().mainModule(new MainModule(this)).build();
+         /* Initialize Firebase */
+
+        /* Enable disk persistence  */
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
     }
 

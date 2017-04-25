@@ -82,10 +82,12 @@ public class DevicesActivity2 extends BaseActivity {
                 return true;
             //Load Settings page
             case R.id.add:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, com.quascenta.petersroad.droidtag.main.RegisterDeviceActivity.class));
+                finish();
                 return true;
             case R.id.signout:
                 signout();
+                finish();
             
             //Load theme
 

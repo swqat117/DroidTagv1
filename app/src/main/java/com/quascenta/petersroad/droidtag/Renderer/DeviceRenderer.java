@@ -1,6 +1,7 @@
 package com.quascenta.petersroad.droidtag.Renderer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import com.pedrogomez.renderers.Renderer;
 import com.quascenta.petersroad.droidtag.R;
 import com.quascenta.petersroad.droidtag.SensorCollection.model.DeviceViewModel;
 import com.quascenta.petersroad.droidtag.widgets.Line_view;
-import com.squareup.picasso.Picasso;
+import com.quascenta.petersroad.droidtag.widgets.TextDrawable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,6 +41,10 @@ public class DeviceRenderer extends Renderer<DeviceViewModel> {
     TextView mDestination_location;
     @Bind(R.id.customer_tracking_id)
     TextView customer_tracking_id;
+    @Bind(R.id.transaction_id)
+    TextView transaction_id;
+    @Bind(R.id.device_name)
+    TextView device;
     Line_view line_view;
 
 
@@ -71,7 +76,7 @@ public class DeviceRenderer extends Renderer<DeviceViewModel> {
      */
     @Override
     protected View inflate(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-        return layoutInflater.inflate(R.layout.device_show_row, viewGroup, false);
+        return layoutInflater.inflate(R.layout.device_sample_show_row, viewGroup, false);
     }
 
     /**
@@ -86,18 +91,19 @@ public class DeviceRenderer extends Renderer<DeviceViewModel> {
         mDestination_location.setText(deviceViewModel.getDestination_to());
         customer_tracking_id.setText("#1021110" + String.valueOf(deviceViewModel.getDEVICE_ID()));
         line_view.setState(deviceViewModel.getStatus());
-
+        transaction_id.setText("Trans ID: 121454752");
+        device.setText(deviceViewModel.getTitle());
+        TextDrawable drawable = TextDrawable.builder()
+                .beginConfig()
+                .withBorder(4) /* thickness in px */
+                .endConfig()
+                .buildRoundRect((deviceViewModel.getTitle().substring(0, 1)), Color.RED, 10);
+        iv_status.setImageDrawable(drawable);
 
 
     }
 
-    private void setImageView(ImageView image, int id) {
-        Picasso.with(context)
-                .load(id)
-                .placeholder(R.drawable.tv_show_placeholder)
-                .into(image);
 
-    }
 
 
     public interface OnItemClickListener {

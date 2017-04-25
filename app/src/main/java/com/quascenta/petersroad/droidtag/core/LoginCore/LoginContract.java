@@ -1,4 +1,4 @@
-package com.quascenta.petersroad.droidtag.core;
+package com.quascenta.petersroad.droidtag.core.LoginCore;
 
 import android.app.Activity;
 
@@ -13,16 +13,22 @@ public interface LoginContract {
         void onLoginSuccess(String message);
 
         void onLoginFailure(String message);
+
+        void onEmailResendSuccess(String message);
     }
 
 
     interface Presenter {
         void login(Activity activity, String email, String password);
+
+        void onResendEmailConfirmation(Activity activity);
     }
 
 
     interface Interactor {
         void performFirebaseLogin(Activity activity, String email, String password);
+
+        void onResendEmailConfirmation(Activity activity);
     }
 
 
@@ -30,6 +36,8 @@ public interface LoginContract {
         void onSuccess(String message);
 
         void onFailure(String message);
+
+        void onEmailSuccess(String message);
     }
 }
 

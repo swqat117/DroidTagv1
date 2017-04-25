@@ -1,5 +1,5 @@
 
-package com.quascenta.petersroad.droidtag.core;
+package com.quascenta.petersroad.droidtag.core.LoginCore;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -39,11 +39,24 @@ public class LoginInteractor implements LoginContract.Interactor {
                             mOnLoginListener.onSuccess(task.getResult().toString());
                             updateFirebaseToken(task.getResult().getUser().getUid(),
                                     new SharedPrefUtils(activity.getApplicationContext()).getString(Constants.ARG_FIREBASE_TOKEN, null));
+
                         } else {
                             mOnLoginListener.onFailure(task.getException().getMessage());
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onResendEmailConfirmation(Activity activity) {
+        FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                mOnLoginListener.onEmailSuccess("Message Sent");
+                Log.d(TAG, "Email resent");
+            }
+        });
     }
 
     private void updateFirebaseToken(String uid, String token) {
@@ -54,4 +67,6 @@ public class LoginInteractor implements LoginContract.Interactor {
                 .child(Constants.ARG_FIREBASE_TOKEN)
                 .setValue(token);
     }
+
+
 }

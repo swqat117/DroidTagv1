@@ -40,11 +40,11 @@
     <string name="error_notvalid_personname">Not a valid first or last name.</string>
     <string name="error_notvalid_personfullname">Not a valid full name.</string>
     <string name="error_date_not_valid">Format not valid</string>
-    <string name="editText_hint_alias"><font size = "8dp"/>Alias name</string>
-    <string name="editText_hint_sourcecompany"><font size = "8dp"/>Entry Point:</string>
-    <string name="editText_hint_sourcelocation"><font size = "8dp"/>location</string>
-    <string name="editText_hint_destinationcompany"><font size = "8dp"/>Exit :</string>
-    <string name="editText_hint_destinationlocation"><font size = "8dp"/>location</string>
+    <string name="editText_hint_alias"><font size="8dp" />Alias name</string>
+    <string name="editText_hint_sourcecompany"><font size="8dp" />Entry Point:</string>
+    <string name="editText_hint_sourcelocation"><font size="8dp" />location</string>
+    <string name="editText_hint_destinationcompany"><font size="8dp" />Exit :</string>
+    <string name="editText_hint_destinationlocation"><font size="8dp" />location</string>
     <string name="end">End</string>
     <string name="start">Start</string>
     <string name="set_limits_humidity">Set Limits (Humidity)</string>
@@ -77,5 +77,10 @@
     <string name="btn_sign_out">Sign Out</string>
     <string name="lbl_forgot_password">Forgot your password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to send your password reset instructions.</string>
+
+    <string name="title_activity_loading">Loading</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

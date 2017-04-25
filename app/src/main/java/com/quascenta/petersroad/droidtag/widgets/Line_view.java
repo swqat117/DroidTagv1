@@ -25,7 +25,8 @@ public class Line_view extends LinearLayout {
     public static final int STATUS_SUCCESS = 1;
     public static final int STATUS_ALERT = 2;
 
-
+    @Bind(R.id.start_date)
+    TextView startDate;
     @Bind(R.id.iv1_icon_start)
     ImageView start;
     @Bind(R.id.view1_horizontal_line)
@@ -71,6 +72,7 @@ public class Line_view extends LinearLayout {
                 lineview1.setBackgroundColor(Color.parseColor("#69F0AE"));
                 lineview2.setBackgroundColor(Color.parseColor("#69F0AE"));
                 status_text_state.setTextColor(Color.parseColor("#69F0AE"));
+                startDate.setTextColor(Color.parseColor("#69F0AE"));
                 status_text_state.setText(" Success");
                 return true;
             case STATUS_ALERT:
@@ -79,6 +81,7 @@ public class Line_view extends LinearLayout {
                 finish.setImageResource(R.drawable.ic_chevron_right_black_24dp);
                 lineview1.setBackgroundColor(Color.parseColor("#f44336"));
                 lineview2.setBackgroundColor(Color.parseColor("#f44336"));
+                startDate.setTextColor(Color.parseColor("#f44336"));
                 status_text_state.setTextColor(Color.parseColor("#f44336"));
                 status_text_state.setText("Data Alert");
                 return false;
@@ -88,7 +91,8 @@ public class Line_view extends LinearLayout {
                 finish.setImageResource(R.drawable.ic_yellow_right);
                 lineview1.setBackgroundColor(Color.parseColor("#FFC107"));
                 lineview2.setBackgroundColor(Color.parseColor("#FFC107"));
-                status_text_state.setTextColor(Color.parseColor("#FFCC00"));
+                startDate.setTextColor(Color.parseColor("#FFC107"));
+                status_text_state.setTextColor(Color.parseColor("#FFC107"));
                 status_text_state.setText("In Progress");
                 return false;
             default:

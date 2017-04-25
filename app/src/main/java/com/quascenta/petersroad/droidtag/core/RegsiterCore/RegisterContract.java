@@ -1,4 +1,4 @@
-package com.quascenta.petersroad.droidtag.core;
+package com.quascenta.petersroad.droidtag.core.RegsiterCore;
 
 import android.app.Activity;
 
@@ -14,6 +14,8 @@ public interface RegisterContract {
 
     interface View {
         void onRegistrationSuccess(FirebaseUser firebaseUser);
+
+        void onProgress(String message);
 
         void onRegistrationFailure(String message);
     }
@@ -31,6 +33,7 @@ public interface RegisterContract {
     interface OnRegistrationListener {
         void onSuccess(FirebaseUser firebaseUser);
 
+        void onProgress(String message);
         void onFailure(String message);
     }
 }

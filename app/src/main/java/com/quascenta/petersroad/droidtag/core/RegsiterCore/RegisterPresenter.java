@@ -1,4 +1,4 @@
-package com.quascenta.petersroad.droidtag.core;
+package com.quascenta.petersroad.droidtag.core.RegsiterCore;
 
 import android.app.Activity;
 
@@ -24,25 +24,34 @@ public class RegisterPresenter implements RegisterContract.Presenter, RegisterCo
 
     }
 
-
+    //RegisterPresenter to RegisterInteractor
     @Override
     public void register(Activity activity) {
-
         mRegisterInteractor.performFirebaseRegistration(activity, CredentialList);
-
-
-
     }
+
+
 
     @Override
     public void sendString(String message) {
         CredentialList.add(message);
     }
 
+
     @Override
     public void onSuccess(FirebaseUser firebaseUser) {
         mRegisterView.onRegistrationSuccess(firebaseUser);
     }
+
+
+    //Presenter to View (Activity)
+    @Override
+    public void onProgress(String message) {
+        mRegisterView.onProgress(message);
+    }
+
+
+
 
     @Override
     public void onFailure(String message) {
