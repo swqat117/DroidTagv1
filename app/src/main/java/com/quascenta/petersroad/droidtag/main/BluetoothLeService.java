@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Created by AKSHAY on 4/12/2017.
@@ -29,6 +30,7 @@ public class BluetoothLeService extends IntentService {
     public static final String BROADCAST_ACTION = "com.quascenta.petersroad.droidtag.BROADCAST";
     public static final String DATA_STATUS = "com.quascenta.petersroad.droidtag.STATUS";
     public static final String DATA_SUCCESS = "com.quascenta.petersroad.droidtag.DATA";
+    public static final String CONFIG_STATUS = "com.quascenta.petersroad.droidtag.CONFIG_STATUS";
     public static final String DATA_ERROR = "com.quascenta.petersroad.droidtag.DATA_ERR";
     public final static String ACTION_GATT_CONNECTED = "com.quascenta.petersroad.droidtag.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
@@ -48,10 +50,11 @@ public class BluetoothLeService extends IntentService {
     private final IBinder mBinder = new LocalBinder();
     String device_address = "";
     StringBuilder stringBuilder;
-    private byte qppDataSend1[] = new byte[]{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    ExecutorService executor;
     private boolean dataRecvFlag = false;
     private boolean qppSendDataState = false;
+    private boolean configFlag = false;
+    private boolean dataSendFlag = false;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
@@ -134,39 +137,49 @@ public class BluetoothLeService extends IntentService {
 
         initialize();
         stringBuilder = new StringBuilder();
-        QppApi.setCallback(new iQppCallback() {
-            @Override
-            public void onQppReceiveData(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic qppUUIDForNotifyChar, byte[] qppData) {
-                output = new String(qppData);
-                stringBuilder.append(output);
-                Log.d(TAG, stringBuilder.toString());
-                broadcastUpdate(stringBuilder.toString(), qppData);
+        QppApi.setCallback((mBluetoothGatt1, qppUUIDForNotifyChar, qppData) -> {
+                    output = new String(qppData);
+                    stringBuilder.append(output);
+                    Log.d(TAG, stringBuilder.toString());
+                    broadcastUpdate(stringBuilder);
 
-            }
-        });
+                }
+
+        );
         super.onCreate();
     }
 
-    public boolean clearLogger() {
-        return configure(new byte[]{Commands.COMMAND_DEVICE_CLEARCONFIGURATION});
+    public void clearLogger() {
+        configFlag = configure(new byte[]{Commands.COMMAND_DEVICE_CLEARCONFIGURATION});
+
     }
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
 
-    public boolean configureLogger(byte b[]) {
+    public void configureLogger(byte b[]) {
+        if (configFlag) {
+            try {
+                Thread.sleep(1000);
+                configure(b);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-        return configure(b);
-
+        }
     }
 
     public boolean configure(byte b[]) {
+
+
         if (mConnected) {
             // Thread.sleep(1000);
             try {
                 stringBuilder.setLength(0);
                 Log.d(TAG, "Its connected before");
-                if (QppApi.qppSendData(mBluetoothGatt, b)) {
+                dataSendFlag = QppApi.qppSendData(mBluetoothGatt, b);
+                if (dataSendFlag) {
+
                     disconnect();
                     Thread.sleep(1000);
                     connect(device_address);
@@ -174,10 +187,9 @@ public class BluetoothLeService extends IntentService {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
         }
-        return false;
+
+        return dataSendFlag;
     }
 
     private void broadcastUpdate(final String action) {
@@ -185,46 +197,97 @@ public class BluetoothLeService extends IntentService {
         sendBroadcast(intent);
     }
 
-    private void broadcastUpdate(final String action, byte[] qpp) {
+    private void broadcastUpdate(StringBuilder stringBuilder) {
 
-        final Intent intent = new Intent(action);
+
         String x = stringBuilder.toString();
 
         if (x.contains("Can't reconfigure : Device is Locked.")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't configure : Parameters Invalid.")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Command Length is invalid")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't start : Datalog is in progress")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't start : Device is not configured")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't Clear Memory :Datalog is Active.")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't start : Date and Time is Invalid")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("No Alarm Messages to send.")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't transfer data : Datalog is Active")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("No temperature data to send.")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't start : Date and Time is Invalid")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't Clear Config :Datalog is Active.")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't resume : Datalog is Active") || x.contains("Can't resume : Datalog is Idle")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
         } else if (x.contains("Can't start : Device is not configured")) {
+            final Intent intent = new Intent(DATA_ERROR);
             intent.putExtra(DATA_ERROR, x);
+            sendBroadcast(intent);
+
         } else {
-            intent.putExtra(DATA_SUCCESS, x);
+            final Intent intent = new Intent(DATA_SUCCESS);
+            intent.putExtra(DATA_SUCCESS, stringBuilder.toString());
+            sendBroadcast(intent);
         }
 
-        sendBroadcast(intent);
+
+        /*else if( x.contains("Last saved Configuration is clear")) {
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        } else if( x.contains("Last saved Configuration is clear")){
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        }else if( x.contains("Last saved Configuration is clear")){
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        }else if( x.contains("Last saved Configuration is clear")){
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        }else if( x.contains("Last saved Configuration is clear")){
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        }else if( x.contains("Last saved Configuration is clear")){
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        }else if( x.contains("Last saved Configuration is clear")){
+            intent.putExtra(ACTION_DATA_AVAILABLE, true);
+        }*/
+
+
+
+
 
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {

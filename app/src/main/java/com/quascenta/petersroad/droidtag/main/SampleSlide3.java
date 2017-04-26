@@ -61,21 +61,25 @@ public class SampleSlide3 extends Fragment {
     BluetoothLeService bluetoothLeService;
     Handler mHandler;
     Intent intent;
-    ProgressDialog progressDialog;
+    SharedPrefUtils sharedPrefUtils;
+    ProgressDialog progressDialog, progressDialog1;
     final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(BluetoothLeService.DATA_ERROR)) {
                 Toast.makeText(getContext(), intent.getStringExtra(BluetoothLeService.DATA_ERROR), Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-            } else if (intent.getAction().equals(BluetoothLeService.DATA_SUCCESS)) {
-                Log.d(TAG, intent.getStringExtra(BluetoothLeService.DATA_SUCCESS));
-                Toast.makeText(getContext(), intent.getStringExtra(BluetoothLeService.DATA_SUCCESS), Toast.LENGTH_SHORT).show();
 
-            } else if (intent.getAction().equals(BluetoothLeService.ACTION_DATA_AVAILABLE)) {
-                //   progressDialog.dismiss();
+            } else if (intent.getAction().equals(BluetoothLeService.DATA_SUCCESS)) {
+
+                change(intent);
+
+
+            } else if (intent.getAction().equals(BluetoothLeService.DATA_STATUS)) {
+                //      new ConfigureDeviceTask().execute();
+
             } else if (intent.getAction().equals(BluetoothLeService.ACTION_GATT_CONNECTED)) {
                 progressDialog.dismiss();
+                progressDialog.setMessage("Connected, Talking to the logger");
             }
         }
     };
@@ -118,6 +122,7 @@ public class SampleSlide3 extends Fragment {
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
         mDevices = new SparseArray<BluetoothDevice>();
+        sharedPrefUtils = new SharedPrefUtils(getActivity().getApplicationContext());
         stringBuilder = new StringBuilder();
         bluetoothLeService = new BluetoothLeService();
 
@@ -129,20 +134,24 @@ public class SampleSlide3 extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.panel_bt, container, false);
         initMainPanel(view);
-        if (getArguments() != null) {
-            device_address = getArguments().getString("device-address");
+
+        device_address = sharedPrefUtils.getString("device-address");
+
             intent = new Intent(getActivity(), BluetoothLeService.class);
             intent.putExtra("device-address", device_address);
             textViewAddress.setText(device_address);
             getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        }
+
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setIndeterminate(true);
         progressDialog.setTitle("WAIT");
         progressDialog.setMessage("Connecting to the logger");
-        progressDialog.show();
-        progressDialog.setCancelable(false);
+        progressDialog1 = new ProgressDialog(getContext());
+        progressDialog1.setIndeterminate(true);
+        progressDialog1.setTitle("WAIT");
+        progressDialog1.setMessage("Connecting to the logger");
+
 
 
         return view;
@@ -170,13 +179,12 @@ public class SampleSlide3 extends Fragment {
         relativeLayout = (RelativeLayout) view.findViewById(R.id.rx1);
         textInvoice = (TextView) view.findViewById(R.id.tx12);
         editText = (FormEditText) view.findViewById(R.id.source_company_name_et);
-        editText1 = (FormEditText) view.findViewById(R.id.destination_company_name_et);
+        editText1 = (FormEditText) view.findViewById(R.id.source_company_name_det);
         lowerLimit = (FormEditText) view.findViewById(R.id.lower_et);
         upperLimit = (FormEditText) view.findViewById(R.id.higher_et);
 
 
         twitch.setOnCheckedChangeListener((buttonView, isChecked) ->
-
                 gsdf());
 
 
@@ -204,9 +212,9 @@ public class SampleSlide3 extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         // DO TASK
-                        progressDialog.show();
-                        progressDialog.setMessage("Configuring Logger");
-                        new PerformBluetoothTask().execute();
+                        progressDialog1.show();
+                        progressDialog1.setMessage("Configuring Logger");
+                        new CheckBleConfigurationTask().execute();
 
 
                     }
@@ -289,7 +297,22 @@ public class SampleSlide3 extends Fragment {
         });
     }
 
-//050065012CCD
+    public void change(Intent intent) {
+        if (intent.getStringExtra(BluetoothLeService.DATA_SUCCESS).contains("The last saved configuration is clear.")) {
+
+            progressDialog1.setMessage("Setting up device..");
+            new ConfigureDeviceTask().execute();
+        }
+        if (intent.getStringExtra(BluetoothLeService.DATA_SUCCESS).contains("Device Configured.")) {
+            progressDialog1.dismiss();
+            relativeLayout.setVisibility(View.VISIBLE);
+            editText.setText(sharedPrefUtils.getString("source-company") + " , " + sharedPrefUtils.getString("source-location"));
+            editText1.setText(sharedPrefUtils.getString("destination-company") + " , " + sharedPrefUtils.getString("destination-location"));
+            lowerLimit.setText(String.valueOf(lowerlimit + " C"));
+            upperLimit.setText(String.valueOf(upperlimit + " C"));
+        }
+    }
+
 
     public String padZero(int number, int radix, int length) {
         number = number * 10;
@@ -300,15 +323,22 @@ public class SampleSlide3 extends Fragment {
         return x;
     }
 
-    private class PerformBluetoothTask extends AsyncTask {
+    private class CheckBleConfigurationTask extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            byte[] bytes = new byte[7];
-            String x = padZero(lowerlimit, 16, 4);
-            String x1 = padZero(upperlimit, 16, 4);
-            int val = Integer.parseInt(x, 16);
-            int val1 = Integer.parseInt(x1, 16);
+            bluetoothLeService.clearLogger();
+            return null;
+
+        }
+    }
+
+
+    private class ConfigureDeviceTask extends AsyncTask {
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            int val = Integer.parseInt(padZero(lowerlimit, 16, 4), 16);
+            int val1 = Integer.parseInt(padZero(upperlimit, 16, 4), 16);
             byte[] finalarray3 = new byte[6];
             finalarray3[5] = (byte) (0x05);
             finalarray3[4] = (byte) ((val >>> 8) & 0x00ff);
@@ -316,12 +346,20 @@ public class SampleSlide3 extends Fragment {
             finalarray3[2] = (byte) ((val1 >>> 8) & 0x00ff);
             finalarray3[1] = (byte) ((val1 >>> 0) & 0x00ff);
             finalarray3[0] = (byte) (0xcd & 0xff);
-            if (bluetoothLeService.clearLogger())
-                bluetoothLeService.configureLogger(finalarray3);
+            bluetoothLeService.configureLogger(finalarray3);
             return null;
-
         }
-
+    }
 
     }
-}
+
+
+
+
+
+
+
+
+
+
+

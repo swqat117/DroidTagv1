@@ -35,7 +35,8 @@ public class RegisterDeviceActivity extends BaseActivity implements Contract.Vie
     String device_address = "";
     BluetoothManager mBluetoothManager;
     SharedPrefUtils sharedPrefUtils;
-
+    Bundle invoiceBundle;
+    SampleSlide3 sampleSlide3;
     Contract.Presenter presenter;
 
 
@@ -86,7 +87,7 @@ public class RegisterDeviceActivity extends BaseActivity implements Contract.Vie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        sampleSlide3 = new SampleSlide3();
         setContentView(R.layout.activity_registerdevice);
 
 
@@ -198,8 +199,7 @@ public class RegisterDeviceActivity extends BaseActivity implements Contract.Vie
 
     @Override
     public void onUpdate(LoggerDevice message) {
-        sharedPrefUtils.saveString("device-address", message.getDeviceAddress());
-        send(message);
+
         Log.d(TAG, message.getDeviceAddress());
     }
 
@@ -211,6 +211,10 @@ public class RegisterDeviceActivity extends BaseActivity implements Contract.Vie
         if (presenter.sendData(bundle.getString("device-name"), bundle.getString("source-company"), bundle.getString("source-location"),
                 bundle.getString("destination-company"), bundle.getString("destination-location"))) {
             ScanDeviceSlide deviceSlide = new ScanDeviceSlide();
+            sharedPrefUtils.saveString("source-company", bundle.getString("source-company"));
+            sharedPrefUtils.saveString("source-location", bundle.getString("source-location"));
+            sharedPrefUtils.saveString("destination-company", bundle.getString("destination-company"));
+            sharedPrefUtils.saveString("destination-location", bundle.getString("destination-location"));
             getSupportFragmentManager().beginTransaction().replace(R.id.coordinator, deviceSlide).addToBackStack(null).commit();
             return true;
 
@@ -221,8 +225,8 @@ public class RegisterDeviceActivity extends BaseActivity implements Contract.Vie
     @Override
     public boolean onScanResult(Bundle bundle) {
         if (presenter.send("device-address", bundle.getString("device-address"))) {
-            SampleSlide3 sampleSlide3 = new SampleSlide3();
-            sampleSlide3.setArguments(bundle);
+            sharedPrefUtils.saveString("device-address", bundle.getString("device-address"));
+
             getSupportFragmentManager().beginTransaction().replace(R.id.coordinator, sampleSlide3).addToBackStack(null).commit();
             return true;
         }
